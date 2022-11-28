@@ -33,14 +33,15 @@ for i in range(0, len(og_points)):
 # Cart positions appending
 for i in range(0, len(ps_indices)-1):
     if(i == 0):
-        for j in range(start_position_set + 1, start_position_set +1 + ps_indices[i] - 1):
+        for j in range(start_position_set + 1, start_position_set + 1 + ps_indices[i] - 1):
             #print(data[j])
             positions.append(OriginalPoint(data[j]))
 
     else:
-        for j in range(ps_indices[i-1] + 1, start_position_set + 1 + ps_indices[i] - 1):
+        for j in range(start_position_set + 1 + ps_indices[i-1] + 1, start_position_set + 1 + ps_indices[i] - 1):
             #print(data[j])
             positions.append(OriginalPoint(data[j]))
+            print(j)
 
 
 
