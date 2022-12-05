@@ -3,9 +3,10 @@ from Point import Point
 from Point import OriginalPoint
 from UTMmodule import UTMmodule
 from ErrorCalculation import ErrorCalculation
+from Visualize import Visualize
 from Line import Line
 
-path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\4-points.txt"
+path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\2-points.txt"
 
 utm = UTMmodule()
 
@@ -127,3 +128,5 @@ else:
 
 average = ErrorCalculation.average(error)
 print("The average error is: " + str(average))
+
+Visualize.scattered(positions_converted, og_points_converted)
