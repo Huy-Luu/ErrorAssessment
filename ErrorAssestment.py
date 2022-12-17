@@ -3,10 +3,12 @@ from Point import Point
 from Point import OriginalPoint
 from UTMmodule import UTMmodule
 from ErrorCalculation import ErrorCalculation
+from PathGenerator import PathGenerator
 from Visualize import Visualize
 from Line import Line
 
-path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\2-points.txt"
+path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\10-12_3.txt"
+path_write = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\result\\10-12_3.txt"
 
 utm = UTMmodule()
 
@@ -17,7 +19,9 @@ positions_converted = []
 line = []
 error = []
 
+
 data = FileReader.readFromText(path)
+result_write = open(path_write, "a")
 #print(data)
 ps_indices = []
 for i in range(0, len(data)):
@@ -123,10 +127,15 @@ else:
         #         error.append(error_tmp)
         #         #error.append(line[i].distanceToPoint(positions_converted[j]))
 
-# for i in range(0, len(error)):
-#     print(error[i])
+# write to file
+for i in range(0, len(error)):
+    print(error[i])
+    result_write.write(str(error[i]) + '\r')
 
 average = ErrorCalculation.average(error)
 print("The average error is: " + str(average))
+result_write.write("The average error is: " + str(average) + "\r")
 
-Visualize.scattered(positions_converted, og_points_converted)
+Visualize.scattered(positions_converted)
+Visualize.line(og_points_converted)
+Visualize.plot()
