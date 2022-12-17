@@ -8,8 +8,8 @@ from Visualize import Visualize
 from Line import Line
 import numpy as np
 
-path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\10-12_2.txt"
-path_write = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\result\\10-12_2.txt"
+path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\10-12_3.txt"
+path_write = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\result\\10-12_3.txt"
 
 utm = UTMmodule()
 
@@ -160,8 +160,13 @@ for i in range(0,len(positions_converted)):
     #print(str(np.degrees(yaw[idx[i]])))
 
 # write to file
+count = 0
 for i in range(0, len(error)):
     #print(error[i])
+    if(i > (ps_indices[count] - end_waypoint_set)):
+        print("New Waypoint")
+        result_write.write("New Waypoint\r")
+        count+=1
     result_write.write(str(error[i]) + '\r')
 
 average = ErrorCalculation.average(error)
