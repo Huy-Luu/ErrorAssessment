@@ -6,9 +6,10 @@ from ErrorCalculation import ErrorCalculation
 from PathGenerator import PathGenerator
 from Visualize import Visualize
 from Line import Line
+import numpy as np
 
-path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\10-12_3.txt"
-path_write = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\result\\10-12_3.txt"
+path = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\data\\10-12_2.txt"
+path_write = "E:\\New folder\\BK\\HK221\\Luan_van_tot_nghiep\\Software\\ErrorAssessment\\result\\10-12_2.txt"
 
 utm = UTMmodule()
 
@@ -16,8 +17,12 @@ og_points = []
 og_points_converted = []
 positions = []
 positions_converted = []
+cart_yaw = []
+yaw_to_compare = []
+error_yaw = []
 line = []
 error = []
+idx = []
 
 
 data = FileReader.readFromText(path)
@@ -41,6 +46,8 @@ print(ps_indices)
 for i in range(start_waypoint_set + 1, end_waypoint_set):
     splitted = data[i].split(',')
     og_points.append(OriginalPoint(data[i]))
+
+path, yaw, waypoint_indices, offset = PathGenerator.generatePath(og_points, utm)
     
 for i in range(0, len(og_points)):
     print(og_points[i].getLat(), og_points[i].getLon())
@@ -50,17 +57,23 @@ for i in range(0, len(og_points)):
 if(len(ps_indices) == 1):
     for j in range(start_position_set + 1, start_position_set + 1 + ps_indices[0] - 1):
             #print(j)
+            splitted = data[j].split(',')
+            cart_yaw.append(splitted[5])
             positions.append(OriginalPoint(data[j]))
 else:
     for i in range(0, len(ps_indices)):
         if(i == 0):
             for j in range(start_position_set + 1, start_position_set + 1 + ps_indices[i] - 1):
                 #print(data[j])
+                splitted = data[j].split(',')
+                cart_yaw.append(splitted[5])
                 positions.append(OriginalPoint(data[j]))
 
         else:
             for j in range(start_position_set + ps_indices[i-1] + 1, start_position_set + 1 + ps_indices[i] - 1):
                 #print(data[j])
+                splitted = data[j].split(',')
+                cart_yaw.append(splitted[5])
                 positions.append(OriginalPoint(data[j]))
                 #print(j)
 
@@ -105,6 +118,7 @@ else:
     print("There are " + str(len(line)) + " lines")
     print("There are " + str(len(og_points)) + " waypoints")
     print("There are " + str(len(positions_converted)) + " positions")
+    print("Waypoints: " + str(ps_indices))
 
     for i in range(0, len(line)):
         print("Line #" + str(i + 1))
@@ -127,9 +141,27 @@ else:
         #         error.append(error_tmp)
         #         #error.append(line[i].distanceToPoint(positions_converted[j]))
 
+#find error yaw
+print("Cart's yaw")
+for i in range(0, len(cart_yaw)):
+    pass
+    #print(str(np.degrees(float(cart_yaw[i]))))
+
+print("Error yaw %")
+count = 0
+for i in range(0,len(positions_converted)):
+    if(i > (ps_indices[count] - end_waypoint_set)):
+        print("New Waypoint")
+        count+=1
+    idx.append(ErrorCalculation.findNearestIndex(positions_converted[i], path))
+    error_yaw.append(abs(np.degrees(float(cart_yaw[i])) - np.degrees(yaw[idx[i]]))) #/abs(np.degrees(yaw[idx[i]])))
+    yaw_to_compare.append(np.degrees(yaw[idx[i]]))
+    print(str(error_yaw[i]))
+    #print(str(np.degrees(yaw[idx[i]])))
+
 # write to file
 for i in range(0, len(error)):
-    print(error[i])
+    #print(error[i])
     result_write.write(str(error[i]) + '\r')
 
 average = ErrorCalculation.average(error)
